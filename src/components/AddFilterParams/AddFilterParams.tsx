@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 interface AddFilterParamsProps {
-    filters: Array<FilterParam> | undefined;
+    filters: Array<any> | null;
     handleFilterParamsChange: (event: React.ChangeEvent, index: number) => void;
     handleAddFilterParams: () => void;
     handleRemoveFilterParam: (index: number) => void;
@@ -89,8 +89,8 @@ export const AddFilterParams = (props: AddFilterParamsProps) => {
                     props.filters.map((param: FilterParam, index: number) => (
                         <div className={classes.filter_group} key={index}>
                             <TextField
-                                label="Имя параметра"
-                                name="name"
+                                label="Значение"
+                                name="value"
                                 value={param.name}
                                 variant="outlined"
                                 onChange={(event) => {
@@ -99,8 +99,8 @@ export const AddFilterParams = (props: AddFilterParamsProps) => {
                                 className={classes.filter_group__item}
                             />
                             <TextField
-                                label="Значение параметра"
-                                name="values"
+                                label="Slug"
+                                name="slug"
                                 value={param.values}
                                 variant="outlined"
                                 onBlur={(event) => {

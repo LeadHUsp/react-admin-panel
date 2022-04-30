@@ -335,7 +335,7 @@ export const AddCategoryPanel: React.FC = (props: any) => {
                                             <TextField
                                                 error={!!errors.slug}
                                                 helperText={errors.slug?.message}
-                                                label="Название категории"
+                                                label="Slug"
                                                 variant="outlined"
                                                 className={classes.input}
                                                 onChange={(e) => field.onChange(e)}

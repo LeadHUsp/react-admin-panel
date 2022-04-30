@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, Link } from 'react-router-dom';
 import { parse, stringify, exclude, pick } from 'query-string';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -231,6 +231,8 @@ export const AttributeTable: React.FC = () => {
                             variant="contained"
                             color="primary"
                             size="small"
+                            component={Link}
+                            to={`attribute/create-attribute`}
                             className={classes.addbtn}
                             startIcon={<AddCircleOutlineIcon />}>
                             {' '}

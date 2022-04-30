@@ -78,16 +78,15 @@ export const DepthSearchSelect: React.FC<DepthSearchSelectPropsInterface> = ({
             ? setActiveCollapse((prev) => prev.filter((i) => i !== value))
             : setActiveCollapse((prev) => [...prev, value]);
     };
-    React.useEffect(() => {
-        const newArray = transformMultilevelDepth(options, depthKey);
-        setformatedData(newArray);
-
+    const flatData = React.useMemo(() => {
+        return transformMultilevelDepth(options, depthKey);
         //eslint-disable-next-line
     }, []);
+
     //обработчик изменения поля поиска
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchInputValue(e.target.value);
-        const filteredArray = formatedData.filter(
+        const filteredArray = flatData.filter(
             (i) =>
                 getOptionLabel(i).toLowerCase().indexOf(e.target.value.toLowerCase()) > -1
         );
@@ -291,7 +290,7 @@ export const DepthSearchSelect: React.FC<DepthSearchSelectPropsInterface> = ({
                 anchorEl={anchorEl.current}
                 onClose={handleClose}
                 anchorOrigin={{
-                    vertical: 'bottom',
+                    vertical: 'top',
                     horizontal: 'left',
                 }}
                 transformOrigin={{

@@ -122,6 +122,12 @@ export default function App() {
                     />
                     <PrivateRoute
                         exact
+                        path="/attribute/create-attribute"
+                        component={EditAttribute}
+                        isAuth={isAuth}
+                    />
+                    <PrivateRoute
+                        exact
                         path="/gallery"
                         component={Gallery}
                         isAuth={isAuth}
