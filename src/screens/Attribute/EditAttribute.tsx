@@ -110,6 +110,10 @@ export const EditAttribute: React.FC = () => {
         return flag || 'slug должен быть уникальным';
     };
     //обработчик отправки данных
+    const sendDataToServer = async (data) => {
+        try {
+        } catch (error) {}
+    };
     // const handleSubmit = () => {};
     const onSubmit = (data: any) => console.log(data);
     return (
