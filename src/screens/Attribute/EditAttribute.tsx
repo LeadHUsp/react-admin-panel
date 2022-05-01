@@ -32,6 +32,7 @@ import { useAppSelector } from 'hooks/redux';
 import { fetchCategoriesData } from 'store/ducks/category/actions';
 import { setAttributeLoadingStatus } from 'store/ducks/attribute/actions';
 import { AttributeGroup } from 'store/ducks/attribute/contracts/state';
+import { Category } from 'store/ducks/category/contracts/state';
 import { AttributeApi } from 'services/api';
 import { SnackBarMessage } from 'components/UI-parts/SnackBarMessage';
 const useStyles = makeStyles({
@@ -55,15 +56,25 @@ const useStyles = makeStyles({
         color: '#fff',
     },
 });
-
+interface IFormEditAttrState {
+    name_admin: string;
+    name_user: string;
+    slug: string;
+    show_in_filter: boolean;
+    unit_text: string;
+    category: Category[];
+    attribute: Array<{ slug: string; value: string }>;
+}
 export const EditAttribute: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const categories = useAppSelector((state) => state.categories.categories);
     const categoriesStatus = useAppSelector((state) => state.categories.status);
     const attributeStatus = useAppSelector((state) => state.attribute.status);
+    const categoriesNames = useAppSelector((state) => state.categories.categoriesNames);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState('');
+    const { editAttrId } = useParams<{ editAttrId: string | undefined }>();
     const {
         handleSubmit,
         setError,
@@ -71,7 +82,7 @@ export const EditAttribute: React.FC = () => {
         getValues,
         control,
         formState: { errors, isDirty },
-    } = useForm({
+    } = useForm<IFormEditAttrState>({
         defaultValues: {
             name_admin: '',
             name_user: '',
@@ -79,18 +90,64 @@ export const EditAttribute: React.FC = () => {
             show_in_filter: false,
             unit_text: '',
             category: [],
-            attribute: [{ value: '', slug: '' }],
+            attribute: [],
         },
     });
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'attribute',
     });
+    const fetchEditAttrData = async () => {
+        try {
+            const { data } = await AttributeApi.getSingleAttrData(editAttrId);
+            for (const key in data) {
+                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                    const value = data[key];
+                    if (key === 'category') {
+                        setValue(
+                            key,
+                            //@ts-ignore
+                            categoriesNames && value ? [categoriesNames[value]] : []
+                        );
+                    }
+                    if (key === 'attribute') {
+                        const attr = value.map(
+                            ({ value, slug }: { value: string; slug: string }) => ({
+                                value,
+                                slug,
+                            })
+                        );
+                        setValue(key, attr);
+                    }
+                    if (
+                        key !== '_id' &&
+                        key !== 'attribute' &&
+                        key !== 'category' &&
+                        key !== 'children' &&
+                        key !== 'createdAt' &&
+                        key !== 'updatedAt'
+                    )
+                        //@ts-ignore
+                        setValue(key, value);
+                }
+            }
+        } catch (error) {
+            setSnackbarOpen(true);
+            setSnackBarMessage('Ошибка при загрузке данных атрибута');
+        }
+    };
     useEffect(() => {
         if (categoriesStatus === LoadingStatus.NEVER) {
             dispatch(fetchCategoriesData());
         }
     }, [categoriesStatus, dispatch]);
+    //получить данные категории, если задан id
+    useEffect(() => {
+        if (editAttrId) {
+            fetchEditAttrData();
+        }
+        //eslint-disable-next-line
+    }, []);
     //создание slug для атрибута из имени
     const handleCreateSlugFromName = (e: React.SyntheticEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -171,7 +228,7 @@ export const EditAttribute: React.FC = () => {
             </Backdrop>
             <Grid item xs={12}>
                 <Typography className={classes.title} variant="h4">
-                    Новый атрибут
+                    {editAttrId ? 'Редактирование атрибута' : 'Новый атрибут'}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -332,7 +389,12 @@ export const EditAttribute: React.FC = () => {
                                                 <FormControlLabel
                                                     value={field.value}
                                                     onChange={(e) => field.onChange(e)}
-                                                    control={<Checkbox color="primary" />}
+                                                    control={
+                                                        <Checkbox
+                                                            color="primary"
+                                                            checked={field.value}
+                                                        />
+                                                    }
                                                     label=" Показывать атрибут в панели фильтров, в
                                                    каталоге магазина"
                                                     labelPlacement="end"
@@ -371,7 +433,11 @@ export const EditAttribute: React.FC = () => {
                                 <Box py={2}>
                                     {fields.map((item, index) => {
                                         return (
-                                            <Grid container spacing={2} key={item.id}>
+                                            <Grid
+                                                container
+                                                spacing={2}
+                                                key={item.id}
+                                                style={{ paddingTop: 10 }}>
                                                 <Grid item xs={5}>
                                                     <Controller
                                                         control={control}

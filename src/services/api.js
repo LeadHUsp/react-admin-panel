@@ -92,4 +92,7 @@ export const AttributeApi = {
             },
         });
     },
+    getSingleAttrData(id) {
+        return instance.get(`attribute-group/${id}`);
+    },
 };

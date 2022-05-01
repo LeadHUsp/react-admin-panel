@@ -268,7 +268,7 @@ export const AddCategoryPanel: React.FC = (props: any) => {
                 message="Вы действительно хотите уйти, ваши изменения не сохранятся"
             />
             <Typography className={classes.heading} variant="h4">
-                Добавить категорию
+                {editCategoryId ? 'Редактирование категории' : ' Добавить категорию'}
             </Typography>
             <form onSubmit={handleSubmit(postCategoryDataToServer)}>
                 <Grid container spacing={2}>

@@ -9,8 +9,9 @@ export interface AttributeGroup {
     attribute: Attribute[];
 }
 export interface Attribute {
-    _id: string;
+    _id?: string;
     value: string;
+    slug: string;
     attribute_group: AttributeGroup;
 }
 export interface AttributeState {
