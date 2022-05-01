@@ -85,4 +85,11 @@ export const AttributeApi = {
     getAllAttributeGroup(str = 'limit=3', page = 1) {
         return instance.get(`attribute-group/page=${page}?${str}`);
     },
+    postSingleAttributeGroup(payload) {
+        return instance.post('attribute-group/', payload, {
+            headers: {
+                Authorization: `${window.localStorage.getItem('token')}`,
+            },
+        });
+    },
 };

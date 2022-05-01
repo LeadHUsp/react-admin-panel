@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 //mui
 import {
     Box,
@@ -16,6 +16,9 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import IconButton from '@material-ui/core/IconButton';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
+import Backdrop from '@material-ui/core/Backdrop/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
+import { theme } from 'theme';
 
 //libs
 import { useDispatch } from 'react-redux';
@@ -27,6 +30,10 @@ import { LoadingStatus } from 'store/types';
 import { DepthSearchSelect } from 'components/UI-parts/DepthSearchSelect';
 import { useAppSelector } from 'hooks/redux';
 import { fetchCategoriesData } from 'store/ducks/category/actions';
+import { setAttributeLoadingStatus } from 'store/ducks/attribute/actions';
+import { AttributeGroup } from 'store/ducks/attribute/contracts/state';
+import { AttributeApi } from 'services/api';
+import { SnackBarMessage } from 'components/UI-parts/SnackBarMessage';
 const useStyles = makeStyles({
     title: {
         paddingBottom: '15px',
@@ -43,6 +50,10 @@ const useStyles = makeStyles({
     input: {
         width: '100%',
     },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 });
 
 export const EditAttribute: React.FC = () => {
@@ -50,6 +61,9 @@ export const EditAttribute: React.FC = () => {
     const dispatch = useDispatch();
     const categories = useAppSelector((state) => state.categories.categories);
     const categoriesStatus = useAppSelector((state) => state.categories.status);
+    const attributeStatus = useAppSelector((state) => state.attribute.status);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackBarMessage, setSnackBarMessage] = useState('');
     const {
         handleSubmit,
         setError,
@@ -109,22 +123,59 @@ export const EditAttribute: React.FC = () => {
 
         return flag || 'slug должен быть уникальным';
     };
+    //обработчик кнопки закрытия окна с сообщением
+    const closeSnackBar = useCallback(() => {
+        setSnackbarOpen(false);
+    }, []);
+
     //обработчик отправки данных
-    const sendDataToServer = async (data) => {
+    const sendDataToServer = async (data: AttributeGroup) => {
         try {
-        } catch (error) {}
+            dispatch(setAttributeLoadingStatus(LoadingStatus.LOADING));
+            // @ts-ignore
+            const categoryId = data.category[0]._id;
+            const attributeData = {
+                ...data,
+                ...{
+                    category: categoryId,
+                },
+            };
+            await AttributeApi.postSingleAttributeGroup(attributeData);
+            setSnackbarOpen(true);
+            setSnackBarMessage('Атрибут создан');
+        } catch (error: any) {
+            if (Object.keys(error.response.data).length > 0) {
+                for (const key in error.response.data) {
+                    // @ts-ignore
+                    setError(key, {
+                        type: 'manual',
+                        message: error.response.data[key],
+                    });
+                }
+            }
+            setSnackbarOpen(true);
+            setSnackBarMessage('Ошибка при создании атрибута');
+        } finally {
+            dispatch(setAttributeLoadingStatus(LoadingStatus.LOADED));
+        }
     };
-    // const handleSubmit = () => {};
-    const onSubmit = (data: any) => console.log(data);
     return (
         <Grid container>
+            <SnackBarMessage open={snackbarOpen} handleClose={closeSnackBar}>
+                {snackBarMessage}
+            </SnackBarMessage>
+            <Backdrop
+                className={classes.backdrop}
+                open={attributeStatus === LoadingStatus.LOADING}>
+                <CircularProgress color="inherit" />
+            </Backdrop>
             <Grid item xs={12}>
                 <Typography className={classes.title} variant="h4">
                     Новый атрибут
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(sendDataToServer)}>
                     <Button
                         type="submit"
                         className={classes.save_btn}
