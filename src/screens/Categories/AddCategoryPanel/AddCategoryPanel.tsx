@@ -94,7 +94,7 @@ const useStyles = makeStyles({
     },
 });
 
-export const AddCategoryPanel: React.FC = (props: any) => {
+const AddCategoryPanel: React.FC = (props: any) => {
     const classes = useStyles();
     const categories = useSelector((state: RootState) => state.categories.categories);
     const categoriesNames = useSelector(
@@ -239,7 +239,7 @@ export const AddCategoryPanel: React.FC = (props: any) => {
 
             // console.log(res);
         } catch (error: any) {
-            if (Object.keys(error.response.data).length > 0) {
+            if (Object.keys(error.response?.data).length > 0) {
                 for (const key in error.response.data) {
                     // @ts-ignore
                     setError(key, {
@@ -530,3 +530,4 @@ export const AddCategoryPanel: React.FC = (props: any) => {
         </React.Fragment>
     );
 };
+export default AddCategoryPanel;

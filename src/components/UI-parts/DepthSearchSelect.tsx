@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 //mui
-import {
-    Chip,
-    makeStyles,
-    TextField,
-    ListItem,
-    List,
-    ListItemText,
-    Paper,
-    Collapse,
-    ListItemIcon,
-    Checkbox,
-    Divider,
-    Popover,
-    Box,
-} from '@material-ui/core';
-
-import { transformMultilevelDepth } from 'helpers/arrayFormating';
+import { makeStyles } from '@material-ui/core/styles';
+import Chip from '@material-ui/core/Chip';
+import TextField from '@material-ui/core/TextField';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+import Collapse from '@material-ui/core/Collapse';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Checkbox from '@material-ui/core/Checkbox';
+import Divider from '@material-ui/core/Divider';
+import Popover from '@material-ui/core/Popover';
+import Box from '@material-ui/core/Box';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+//helpers
+import { transformMultilevelDepth } from 'helpers/arrayFormating';
 
 const useStyles = makeStyles((theme) => ({
     select: {

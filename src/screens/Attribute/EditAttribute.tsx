@@ -1,16 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
 //mui
-import {
-    Box,
-    Button,
-    Grid,
-    makeStyles,
-    Paper,
-    TextField,
-    Typography,
-    FormControlLabel,
-    Checkbox,
-} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import SaveIcon from '@material-ui/icons/Save';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
@@ -63,9 +61,9 @@ interface IFormEditAttrState {
     show_in_filter: boolean;
     unit_text: string;
     category: Category[];
-    attribute: Array<{ slug: string; value: string }>;
+    attribute: Array<{ slug: string; value: string; _id?: string }>;
 }
-export const EditAttribute: React.FC = () => {
+const EditAttribute: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const categories = useAppSelector((state) => state.categories.categories);
@@ -73,6 +71,7 @@ export const EditAttribute: React.FC = () => {
     const attributeStatus = useAppSelector((state) => state.attribute.status);
     const categoriesNames = useAppSelector((state) => state.categories.categoriesNames);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [savedData, setSavedData] = useState(false);
     const [snackBarMessage, setSnackBarMessage] = useState('');
     const { editAttrId } = useParams<{ editAttrId: string | undefined }>();
     const {
@@ -112,9 +111,18 @@ export const EditAttribute: React.FC = () => {
                     }
                     if (key === 'attribute') {
                         const attr = value.map(
-                            ({ value, slug }: { value: string; slug: string }) => ({
+                            ({
                                 value,
                                 slug,
+                                _id,
+                            }: {
+                                value: string;
+                                slug: string;
+                                _id: string;
+                            }) => ({
+                                value,
+                                slug,
+                                _id,
                             })
                         );
                         setValue(key, attr);
@@ -197,11 +205,16 @@ export const EditAttribute: React.FC = () => {
                     category: categoryId,
                 },
             };
-            await AttributeApi.postSingleAttributeGroup(attributeData);
+            editAttrId
+                ? await AttributeApi.updateAttributeGroup(attributeData, editAttrId)
+                : await AttributeApi.postSingleAttributeGroup(attributeData);
             setSnackbarOpen(true);
-            setSnackBarMessage('Атрибут создан');
+            setSavedData(true);
+            editAttrId
+                ? setSnackBarMessage('Атрибут обновлен')
+                : setSnackBarMessage('Атрибут создан');
         } catch (error: any) {
-            if (Object.keys(error.response.data).length > 0) {
+            if (Object.keys(error.response?.data).length > 0) {
                 for (const key in error.response.data) {
                     // @ts-ignore
                     setError(key, {
@@ -211,13 +224,19 @@ export const EditAttribute: React.FC = () => {
                 }
             }
             setSnackbarOpen(true);
-            setSnackBarMessage('Ошибка при создании атрибута');
+            editAttrId
+                ? setSnackBarMessage('Ошибка при обновлении атрибута')
+                : setSnackBarMessage('Ошибка при создании атрибута');
         } finally {
             dispatch(setAttributeLoadingStatus(LoadingStatus.LOADED));
         }
     };
     return (
         <Grid container>
+            <Prompt
+                when={isDirty && !savedData}
+                message="Вы действительно хотите уйти, ваши изменения не сохранятся"
+            />
             <SnackBarMessage open={snackbarOpen} handleClose={closeSnackBar}>
                 {snackBarMessage}
             </SnackBarMessage>
@@ -571,3 +590,4 @@ export const EditAttribute: React.FC = () => {
         </Grid>
     );
 };
+export default EditAttribute;

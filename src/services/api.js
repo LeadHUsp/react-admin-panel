@@ -95,4 +95,11 @@ export const AttributeApi = {
     getSingleAttrData(id) {
         return instance.get(`attribute-group/${id}`);
     },
+    updateAttributeGroup(payload, attrId) {
+        return instance.put(`attribute-group/${attrId}`, payload, {
+            headers: {
+                Authorization: `${window.localStorage.getItem('token')}`,
+            },
+        });
+    },
 };

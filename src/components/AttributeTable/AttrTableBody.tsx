@@ -1,22 +1,20 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useStyles } from './AttributeTable';
 import { Link } from 'react-router-dom';
 //mui
-import { TableBody, TableRow, TableCell, IconButton } from '@material-ui/core';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
 //store
 import { RootState } from 'store/store';
-import { setOpenAttributeEditPanel } from 'store/ducks/attribute/actions';
 
 export const AttrTableBody: React.FC = () => {
     const attrGroup = useSelector((state: RootState) => state.attribute.attr_group);
     const classes = useStyles();
-    const dispatch = useDispatch();
-    const openEditPanel = () => {
-        dispatch(setOpenAttributeEditPanel(true));
-    };
     return (
         <TableBody>
             {attrGroup?.map((row) => (

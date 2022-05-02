@@ -1,5 +1,7 @@
-import { ReactElement } from 'react';
+import { ReactElement, Suspense } from 'react';
 import { Route, Redirect, RouteProps } from 'react-router-dom';
+import Backdrop from '@material-ui/core/Backdrop/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 
 interface PrivateRouteProps extends RouteProps {
     component: any;
@@ -15,7 +17,14 @@ export const PrivateRoute = (props: PrivateRouteProps): ReactElement => {
             {...rest}
             render={(routeProps) =>
                 isAuth ? (
-                    <Component {...routeProps} {...rest} />
+                    <Suspense
+                        fallback={
+                            <Backdrop open={true}>
+                                <CircularProgress color="inherit" />
+                            </Backdrop>
+                        }>
+                        <Component {...routeProps} {...rest} />
+                    </Suspense>
                 ) : (
                     <Redirect
                         to={{

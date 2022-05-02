@@ -20,7 +20,9 @@ import Button from '@material-ui/core/Button/Button';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
-import { DialogContent, DialogActions } from '@material-ui/core';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+
 import {
     DropLoaderMemo,
     SingleFileUploadWithProgressMemo,
@@ -31,7 +33,7 @@ import Box from '@material-ui/core/Box/Box';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import PaginationItem from '@material-ui/lab/PaginationItem';
 
-export const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
+const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
     modal,
     singleChoosed,
 }) => {
@@ -206,3 +208,4 @@ export const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
         </Grid>
     );
 };
+export default Gallery;

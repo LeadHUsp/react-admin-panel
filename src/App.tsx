@@ -14,12 +14,20 @@ import SignUp from 'screens/SignUp/SignUp';
 import { PrivateRoute } from 'components/HOC/PrivateRouter';
 
 import { appClasses } from 'appClasses';
-import { Categories } from 'screens/Categories/Categories';
-import { AddCategoryPanel } from 'screens/Categories/AddCategoryPanel/AddCategoryPanel';
-import { Gallery } from 'screens/Gallery/Gallery';
-import { AttributeScreen } from 'screens/Attribute/Attribute';
-import { EditAttribute } from 'screens/Attribute/EditAttribute';
-import GalleryEdit from 'screens/Gallery/GalleryEdit';
+const Categories = React.lazy(() => import('screens/Categories/Categories'));
+const AddCategoryPanel = React.lazy(
+    () => import('screens/Categories/AddCategoryPanel/AddCategoryPanel')
+);
+const Gallery = React.lazy(() => import('screens/Gallery/Gallery'));
+const GalleryEdit = React.lazy(() => import('screens/Gallery/GalleryEdit'));
+const AttributeScreen = React.lazy(() => import('screens/Attribute/Attribute'));
+const EditAttribute = React.lazy(() => import('screens/Attribute/EditAttribute'));
+// import { Categories } from 'screens/Categories/Categories';
+// import  AddCategoryPanel  from 'screens/Categories/AddCategoryPanel/AddCategoryPanel';
+// import { Gallery } from 'screens/Gallery/Gallery';
+// import { AttributeScreen } from 'screens/Attribute/Attribute';
+// import { EditAttribute } from 'screens/Attribute/EditAttribute';
+// import GalleryEdit from 'screens/Gallery/GalleryEdit';
 
 export default function App() {
     const isAuth = useSelector(selectIsAuth);

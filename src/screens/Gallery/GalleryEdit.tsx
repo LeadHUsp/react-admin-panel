@@ -18,15 +18,14 @@ import PermMediaIcon from '@material-ui/icons/PermMedia';
 import SaveIcon from '@material-ui/icons/Save';
 import EventIcon from '@material-ui/icons/Event';
 import Box from '@material-ui/core/Box/Box';
-import {
-    List,
-    ListItem,
-    ListItemText,
-    ListItemIcon,
-    ListSubheader,
-} from '@material-ui/core';
-import { Beforeunload } from 'react-beforeunload';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListSubheader from '@material-ui/core/ListSubheader';
 import Button from '@material-ui/core/Button/Button';
+
+import { Beforeunload } from 'react-beforeunload';
 import defaulThumb from 'static/default-thumbnail.jpg';
 
 const useStyles = makeStyles({

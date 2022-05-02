@@ -1,31 +1,26 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import { parse, stringify, exclude, pick } from 'query-string';
-
+//mui
 import { makeStyles } from '@material-ui/core/styles';
-import {
-    Table,
-    TableContainer,
-    Paper,
-    IconButton,
-    Toolbar,
-    Typography,
-    Box,
-    OutlinedInput,
-    InputLabel,
-    FormControl,
-    Grid,
-    Button,
-    Collapse,
-    Tooltip,
-    LinearProgress,
-} from '@material-ui/core';
-
+import Table from '@material-ui/core/Table';
+import TableContainer from '@material-ui/core/TableContainer';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import Tooltip from '@material-ui/core/Tooltip';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { theme } from 'theme';
-
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import { EditAttributePanel } from 'components/EditAttributePanel/EditAttributePanel';
 import SearchIcon from '@material-ui/icons/Search';
 //store
 import { LoadingStatus } from 'store/types';
@@ -328,7 +323,6 @@ export const AttributeTable: React.FC = () => {
                     totalPages={totalPages}
                 />
             </Paper>
-            <EditAttributePanel />
         </>
     );
 };

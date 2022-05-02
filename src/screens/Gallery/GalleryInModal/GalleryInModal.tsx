@@ -8,7 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent/DialogContent';
 import { useDispatch, useSelector } from 'react-redux';
 import { setOpenGalleryModal } from 'store/ducks/gallery/actions';
 import { RootState } from 'store/store';
-import { Gallery } from '../Gallery';
+import Gallery from '../Gallery';
 
 interface GalleryInModalInterface {
     singleChoosed: boolean;

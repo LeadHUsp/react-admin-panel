@@ -5,14 +5,13 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategoriesData } from '../../store/ducks/category/actions';
 import { RootState } from '../../store/store';
-
 import Button from '@material-ui/core/Button';
 
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { theme } from '../../theme';
 
 import { DisplayCategories } from './DisplayCategories/DisplayCategories';
-import { LoadingStatus } from '../../store/types';
+import { LoadingStatus } from 'store/types';
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
@@ -22,7 +21,7 @@ const useStyles = makeStyles({
     },
 });
 
-export function Categories() {
+export default function Categories() {
     const classes = useStyles();
     const dispatch = useDispatch();
     const categoriesStatus = useSelector((state: RootState) => state.categories.status);

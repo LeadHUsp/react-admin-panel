@@ -4,23 +4,21 @@ import { Link, useLocation } from 'react-router-dom';
 //mui
 import { theme } from 'theme';
 import { makeStyles } from '@material-ui/core/styles';
-import { FetchedCategoryInterface } from 'store/ducks/category/contracts/state';
-import {
-    TextField,
-    Accordion,
-    AccordionSummary,
-    AccordionDetails,
-    Paper,
-    Button,
-    IconButton,
-    Typography,
-} from '@material-ui/core';
+import TextField from '@material-ui/core/TextField';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 import ClearOutlinedIcon from '@material-ui/icons/ClearOutlined';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
 import CreateIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/Delete';
 //store
+import { FetchedCategoryInterface } from 'store/ducks/category/contracts/state';
 import { RootState } from 'store/store';
 import {
     deleteSingleCategoryRequest,
