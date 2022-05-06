@@ -4,21 +4,47 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSignIn } from '../../store/ducks/auth/actions';
 import { RootState } from '../../store/store';
 import { Redirect } from 'react-router-dom';
+import wall from 'static/logindesk.jpg';
+import { url } from 'inspector';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        form: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+        login: {
             height: '100%',
         },
+        login__wallpaper: {
+            width: '100%',
+            height: '100%',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center right',
+            display: 'none',
+            '@media screen and (min-width:600px)': {
+                display: 'block',
+            },
+        },
+        login__form: {
+            background: '#fff',
+            borderLeft: '1px solid #ecf0f1',
+        },
+        form: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '10px',
+            height: '100%',
+            '@media screen and (min-width:420px)': {
+                padding: '25px',
+            },
+        },
         form__wrapper: {
-            width: '320px',
+            maxWidth: '350px',
             padding: theme.spacing(2),
         },
         form__input: {
@@ -58,42 +84,59 @@ export default function SignIn() {
         );
     } else {
         return (
-            <div className={classes.form}>
-                <Paper className={classes.form__wrapper}>
-                    <Typography align="center" variant="h5" paragraph>
-                        Sign In
-                    </Typography>
-                    <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-                        <div>
-                            <TextField
-                                className={classes.form__input}
-                                id="standard-basic"
-                                label="Email"
-                                onChange={(e) => {
-                                    setEmail(e.target.value);
-                                }}
-                            />
+            <Grid container className={classes.login}>
+                <Grid item xl={3} md={4} sm={7} xs={12} className={classes.login__form}>
+                    <div className={classes.form}>
+                        <Typography align="center" variant="h5">
+                            Gadget-Shop
+                        </Typography>
+                        <Typography align="center" variant="subtitle1" paragraph>
+                            панель администратора
+                        </Typography>
+                        <div className={classes.form__wrapper}>
+                            <Typography align="left" variant="subtitle1" paragraph>
+                                Добро пожаловать! Пожалуйста введите email и пароль для
+                                входа чтобы продолжить.
+                            </Typography>
+                            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+                                <div>
+                                    <TextField
+                                        className={classes.form__input}
+                                        label="Email"
+                                        value={email}
+                                        onChange={(e) => {
+                                            setEmail(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <TextField
+                                        className={classes.form__input}
+                                        value={pas}
+                                        type="password"
+                                        label="Пароль"
+                                        onChange={(e) => {
+                                            setPas(e.target.value);
+                                        }}
+                                    />
+                                </div>
+                                <Button
+                                    className={classes.form__btn}
+                                    type="submit"
+                                    variant="contained"
+                                    color="primary">
+                                    Войти
+                                </Button>
+                            </form>
                         </div>
-                        <div>
-                            <TextField
-                                className={classes.form__input}
-                                id="standard-basic"
-                                label="Password"
-                                onChange={(e) => {
-                                    setPas(e.target.value);
-                                }}
-                            />
-                        </div>
-                        <Button
-                            className={classes.form__btn}
-                            type="submit"
-                            variant="contained"
-                            color="primary">
-                            sign in
-                        </Button>
-                    </form>
-                </Paper>
-            </div>
+                    </div>
+                </Grid>
+                <Grid item xl={9} md={8} sm={5}>
+                    <div
+                        style={{ backgroundImage: `url(${wall})` }}
+                        className={classes.login__wallpaper}></div>
+                </Grid>
+            </Grid>
         );
     }
 }

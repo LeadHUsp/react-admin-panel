@@ -85,6 +85,9 @@ export const AttributeApi = {
     getAllAttributeGroup(str = 'limit=3', page = 1) {
         return instance.get(`attribute-group/page=${page}?${str}`);
     },
+    getSingleAttrData(id) {
+        return instance.get(`attribute-group/${id}`);
+    },
     postSingleAttributeGroup(payload) {
         return instance.post('attribute-group/', payload, {
             headers: {
@@ -92,11 +95,15 @@ export const AttributeApi = {
             },
         });
     },
-    getSingleAttrData(id) {
-        return instance.get(`attribute-group/${id}`);
-    },
     updateAttributeGroup(payload, attrId) {
         return instance.put(`attribute-group/${attrId}`, payload, {
+            headers: {
+                Authorization: `${window.localStorage.getItem('token')}`,
+            },
+        });
+    },
+    deleteSingleAttribute(id) {
+        return instance.delete(`attribute-group/${id}`, {
             headers: {
                 Authorization: `${window.localStorage.getItem('token')}`,
             },

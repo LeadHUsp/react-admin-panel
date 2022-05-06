@@ -14,8 +14,6 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import IconButton from '@material-ui/core/IconButton';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
-import Backdrop from '@material-ui/core/Backdrop/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress/CircularProgress';
 import { theme } from 'theme';
 
 //libs
@@ -33,6 +31,7 @@ import { AttributeGroup } from 'store/ducks/attribute/contracts/state';
 import { Category } from 'store/ducks/category/contracts/state';
 import { AttributeApi } from 'services/api';
 import { SnackBarMessage } from 'components/UI-parts/SnackBarMessage';
+import { Preloader } from 'components/Preloader/Preloader';
 const useStyles = makeStyles({
     title: {
         paddingBottom: '15px',
@@ -48,10 +47,6 @@ const useStyles = makeStyles({
     },
     input: {
         width: '100%',
-    },
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
     },
 });
 interface IFormEditAttrState {
@@ -214,7 +209,8 @@ const EditAttribute: React.FC = () => {
                 ? setSnackBarMessage('Атрибут обновлен')
                 : setSnackBarMessage('Атрибут создан');
         } catch (error: any) {
-            if (Object.keys(error.response?.data).length > 0) {
+            console.log(error);
+            if (Object.keys(error?.response?.data).length > 0) {
                 for (const key in error.response.data) {
                     // @ts-ignore
                     setError(key, {
@@ -240,11 +236,8 @@ const EditAttribute: React.FC = () => {
             <SnackBarMessage open={snackbarOpen} handleClose={closeSnackBar}>
                 {snackBarMessage}
             </SnackBarMessage>
-            <Backdrop
-                className={classes.backdrop}
-                open={attributeStatus === LoadingStatus.LOADING}>
-                <CircularProgress color="inherit" />
-            </Backdrop>
+            <Preloader open={attributeStatus === LoadingStatus.LOADING} />
+
             <Grid item xs={12}>
                 <Typography className={classes.title} variant="h4">
                     {editAttrId ? 'Редактирование атрибута' : 'Новый атрибут'}

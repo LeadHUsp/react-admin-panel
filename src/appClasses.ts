@@ -5,8 +5,11 @@ export const appClasses = makeStyles((theme: Theme) => {
     return createStyles({
         root: {
             display: 'flex',
+            height: '100%',
         },
-
+        fullpage: {
+            height: '100%',
+        },
         drawerHeader: {
             display: 'flex',
             alignItems: 'center',

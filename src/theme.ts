@@ -6,4 +6,20 @@ export const theme = createTheme({
             main: '#3e498c',
         },
     },
+    overrides: {
+        MuiCssBaseline: {
+            '@global': {
+                html: {
+                    WebkitFontSmoothing: 'auto',
+                    height: '100%',
+                },
+                body: {
+                    height: '100%',
+                },
+                '#root': {
+                    height: '100%',
+                },
+            },
+        },
+    },
 });

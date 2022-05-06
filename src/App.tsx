@@ -70,7 +70,7 @@ export default function App() {
                 />
             )}
             <main
-                className={clsx(classes.content, {
+                className={clsx(isAuth ? classes.content : classes.fullpage, {
                     [classes.contentShift]: open,
                 })}>
                 <Switch>

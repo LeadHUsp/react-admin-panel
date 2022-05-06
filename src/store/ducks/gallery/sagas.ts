@@ -75,7 +75,6 @@ function* uploadChangeGalleryItemRequest({
     try {
         yield put(setGalleryLoadingStatus(LoadingStatus.LOADING));
         const { data } = yield call(galleryApi.updateGalleryItem, payload);
-        console.log(data);
         yield put(setGalleryLoadingStatus(LoadingStatus.LOADED));
         yield put(setEditGalleryItem(data));
         yield put(setChangeNotSaved(false));

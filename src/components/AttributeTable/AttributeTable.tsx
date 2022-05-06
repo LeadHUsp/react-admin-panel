@@ -211,7 +211,15 @@ export const AttributeTable: React.FC = () => {
         },
         [searchTextValue]
     );
-
+    const handleDeleteSingleItem = React.useCallback(
+        (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+            setSearchFilterOptions((prev) => ({
+                ...prev,
+                search: searchTextValue,
+            }));
+        },
+        [searchTextValue]
+    );
     return (
         <>
             <Paper className={classes.wrapper}>

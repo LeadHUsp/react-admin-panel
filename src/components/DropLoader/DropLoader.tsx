@@ -7,7 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress/LinearProgress';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography/Typography';
 
-import { theme } from '../../theme';
+import { theme } from 'theme';
 import IconButton from '@material-ui/core/IconButton/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 

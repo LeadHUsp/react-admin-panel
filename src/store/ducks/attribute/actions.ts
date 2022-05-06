@@ -7,6 +7,7 @@ import {
     SetOpenAttributeEditPanelActionInterface,
     SetCurrentPageActionInterface,
     SetTotalPagesActionInterface,
+    IFetchDeleteSingleAttribute,
 } from './contracts/types';
 
 export const fetchAttributeGroupData = (
@@ -14,6 +15,16 @@ export const fetchAttributeGroupData = (
     page?: number
 ): FetchAttributeGroupDataActionInterface => ({
     type: AttributeActionType.FETCH_ATTRIBUTE_GROUP_DATA,
+    str,
+    page,
+});
+export const fetchDeleteSingleGroupData = (
+    payload: string,
+    str?: string,
+    page?: number
+): IFetchDeleteSingleAttribute => ({
+    type: AttributeActionType.FETCH_DELETE_ATTRIBUTE_GROUP_SINGLE,
+    payload,
     str,
     page,
 });

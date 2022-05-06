@@ -5,6 +5,7 @@ import { Attribute, AttributeGroup } from './state';
 export enum AttributeActionType {
     SET_ATTRIBUTE_LOADING_STATUS = 'attribute/SET_ATTRIBUTE_LOADING_STATUS',
     FETCH_ATTRIBUTE_GROUP_DATA = 'attribute/FETCH_ATTRIBUTE_GROUP_DATA',
+    FETCH_DELETE_ATTRIBUTE_GROUP_SINGLE = 'attribute/FETCH_DELETE_ATTRIBUTE_GROUP_SINGLE',
     SET_ATTRIBUTE_GROUP_DATA = 'attribute/SET_ATTRIBUTE_GROUP_DATA',
     SET_OPEN_ATTRIBUTE_EDIT_PANEL = 'attribute/SET_OPEN_ATTRIBUTE_EDIT_PANEL',
     SET_CURRENT_PAGE = 'attribute/SET_CURRENT_PAGE',
@@ -38,4 +39,10 @@ export interface SetOpenAttributeEditPanelActionInterface
     extends Action<AttributeActionType> {
     type: AttributeActionType.SET_OPEN_ATTRIBUTE_EDIT_PANEL;
     payload: boolean;
+}
+export interface IFetchDeleteSingleAttribute extends Action<AttributeActionType> {
+    type: AttributeActionType.FETCH_DELETE_ATTRIBUTE_GROUP_SINGLE;
+    payload: string;
+    str?: string;
+    page?: number;
 }
