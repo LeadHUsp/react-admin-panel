@@ -9,6 +9,7 @@ import { AuthState } from './ducks/auth/contracts/state';
 import { CategoryState } from './ducks/category/contracts/state';
 import { GalleryState } from './ducks/gallery/contracts/state';
 import { AttributeState } from './ducks/attribute/contracts/state';
+import { INotificationState } from './ducks/notification/state';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -24,4 +25,5 @@ export interface RootState {
     categories: CategoryState;
     gallery: GalleryState;
     attribute: AttributeState;
+    notification: INotificationState;
 }

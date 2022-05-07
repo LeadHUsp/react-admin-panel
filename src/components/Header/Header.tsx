@@ -17,10 +17,10 @@ import PersonIcon from '@material-ui/icons/Person';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState } from 'store/store';
 import { headerClasses } from './headerClasses';
-import { selectIsAuth } from '../../store/ducks/auth/selectors';
-import { fetchSignOut } from '../../store/ducks/auth/actions';
+import { selectIsAuth } from 'store/ducks/auth/selectors';
+import { fetchSignOut } from 'store/ducks/auth/actions';
 //components
 import { SideBar } from '../SideBar/SideBar';
 

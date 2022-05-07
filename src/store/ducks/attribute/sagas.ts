@@ -4,7 +4,7 @@ import {
     setAttributeGroupData,
     setAttributeLoadingStatus,
     setTotalPages,
-    fetchAttributeGroupData,
+    setAttributeGroupIds,
 } from './actions';
 import {
     AttributeActionType,
@@ -12,6 +12,7 @@ import {
     IFetchDeleteSingleAttribute,
 } from './contracts/types';
 import { AttributeApi } from 'services/api';
+import { AttributeGroup } from './contracts/state';
 
 export function* fetchAttributeGroupRequest({
     str,
@@ -25,6 +26,8 @@ export function* fetchAttributeGroupRequest({
         } = yield call(AttributeApi.getAllAttributeGroup, str, page);
         yield put(setAttributeGroupData(data));
         yield put(setTotalPages(Number(x_totalpages)));
+        const idsArray = data.map((item: AttributeGroup) => item._id);
+        yield put(setAttributeGroupIds(idsArray));
     } catch (error) {
         console.log(error);
     } finally {

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
 import { useStyles } from './AttributeTable';
 import { Link } from 'react-router-dom';
 //mui
@@ -9,35 +8,67 @@ import TableCell from '@material-ui/core/TableCell';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CreateIcon from '@material-ui/icons/Create';
-//store
-import { RootState } from 'store/store';
+import Checkbox from '@material-ui/core/Checkbox';
+
+//other
+import { useAppSelector } from 'hooks/redux';
+import { useDispatch } from 'react-redux';
+import { setChoosedItems, confirmDeleteSingleItem } from 'store/ducks/attribute/actions';
 
 export const AttrTableBody: React.FC = () => {
-    const attrGroup = useSelector((state: RootState) => state.attribute.attr_group);
+    const attrGroup = useAppSelector((state) => state.attribute.attr_group);
+    const choosedGroups = useAppSelector((state) => state.attribute.choosed_items);
+
     const classes = useStyles();
+    const dispatch = useDispatch();
+    //обработчик выбора текущего элемента
+    const choseItemHandler = useCallback(
+        (id: string) => () => {
+            if (choosedGroups.includes(id)) {
+                const arrayOfIdsWithoutId = choosedGroups.filter((item) => item !== id);
+                dispatch(setChoosedItems(arrayOfIdsWithoutId));
+            } else {
+                const arrayOfIdsWithId = [...choosedGroups, id];
+                dispatch(setChoosedItems(arrayOfIdsWithId));
+            }
+        },
+        [choosedGroups, dispatch]
+    );
+    //обработчик инициализации операции удаления еденичного элемента
+    const btnDeleteClickHandler = useCallback(
+        (id: string) => (event: React.ChangeEvent<EventTarget>) => {
+            event.stopPropagation();
+            dispatch(confirmDeleteSingleItem(id));
+        },
+        [dispatch]
+    );
     return (
         <TableBody>
             {attrGroup?.map((row) => (
                 <TableRow hover key={row._id}>
+                    <TableCell padding="checkbox" className={classes.cell}>
+                        <Checkbox
+                            checked={choosedGroups.includes(row._id)}
+                            onChange={choseItemHandler(row._id)}
+                        />
+                    </TableCell>
+                    <TableCell className={classes.action_cell}>
+                        <IconButton
+                            aria-label="change"
+                            color="primary"
+                            component={Link}
+                            to={`attribute/edit-attribute/${row._id}`}>
+                            <CreateIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                            aria-label="delete"
+                            color="secondary"
+                            onClick={btnDeleteClickHandler(row._id)}>
+                            <DeleteIcon fontSize="small" />
+                        </IconButton>
+                    </TableCell>
                     <TableCell className={classes.cell} component="th" scope="row">
-                        <div>
-                            <IconButton
-                                aria-label="change"
-                                color="primary"
-                                component={Link}
-                                to={`attribute/edit-attribute/${row._id}`}>
-                                <CreateIcon fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                                aria-label="delete"
-                                color="secondary"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                }}>
-                                <DeleteIcon fontSize="small" />
-                            </IconButton>
-                            {row.name_user}
-                        </div>
+                        <div>{row.name_user}</div>
                     </TableCell>
                     <TableCell className={classes.cell} align="right">
                         {row.name_admin}
@@ -46,14 +77,6 @@ export const AttrTableBody: React.FC = () => {
                         {row.attribute.map((item) => (
                             <p key={item.value}> {item.value}</p>
                         ))}
-                        {/* <Button
-                                        variant="contained"
-                                        color="primary"
-                                        size="small"
-                                        className={classes.addbtn}
-                                        startIcon={<AddCircleIcon />}>
-                                        Добавить атрибут
-                                    </Button> */}
                     </TableCell>
                     <TableCell className={classes.cell} align="right">
                         {row.show_in_filter ? 'Да' : 'Нет'}

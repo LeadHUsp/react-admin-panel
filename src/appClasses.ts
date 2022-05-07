@@ -20,7 +20,8 @@ export const appClasses = makeStyles((theme: Theme) => {
         },
         content: {
             width: '100%',
-            padding: theme.spacing(3),
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
             transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
@@ -28,6 +29,10 @@ export const appClasses = makeStyles((theme: Theme) => {
             marginLeft: -drawerWidth,
             paddingTop: theme.spacing(11),
             minHeight: '100vh',
+            '@media screen and (min-width:600px)': {
+                paddingLeft: theme.spacing(3),
+                paddingRight: theme.spacing(3),
+            },
         },
         contentShift: {
             transition: theme.transitions.create('margin', {

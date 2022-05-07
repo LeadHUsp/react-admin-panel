@@ -19,6 +19,7 @@ import {
     setEditGalleryItem,
     setChangeNotSaved,
 } from './actions';
+import { setOpenNotification } from 'store/ducks/notification/actions';
 import { RootState } from 'store/store';
 import { ChoosedItem } from './contracts/state';
 
@@ -75,11 +76,21 @@ function* uploadChangeGalleryItemRequest({
     try {
         yield put(setGalleryLoadingStatus(LoadingStatus.LOADING));
         const { data } = yield call(galleryApi.updateGalleryItem, payload);
-        yield put(setGalleryLoadingStatus(LoadingStatus.LOADED));
         yield put(setEditGalleryItem(data));
         yield put(setChangeNotSaved(false));
+        yield put(
+            setOpenNotification({ message: 'Данные сохранены', severity: 'success' })
+        );
     } catch (error) {
         console.log(error);
+        yield put(
+            setOpenNotification({
+                message: 'При сохранении произошла ошибка',
+                severity: 'error',
+            })
+        );
+    } finally {
+        yield put(setGalleryLoadingStatus(LoadingStatus.LOADED));
     }
 }
 export function* gallerySaga() {

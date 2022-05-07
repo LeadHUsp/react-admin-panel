@@ -15,9 +15,12 @@ export interface Attribute {
     attribute_group: AttributeGroup;
 }
 export interface AttributeState {
-    attr_group: Array<AttributeGroup> | null;
+    attr_group: Array<AttributeGroup>;
+    attr_group_ids: string[];
     current_page: number;
     total_pages: number;
+    choosed_items: string[];
+    delete_single_item_id: string | null;
+    open_confirm_dialog: boolean;
     status: LoadingStatus;
-    open_edit_panel: boolean;
 }

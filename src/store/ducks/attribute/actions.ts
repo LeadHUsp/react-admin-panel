@@ -4,10 +4,13 @@ import {
     FetchAttributeGroupDataActionInterface,
     SetAttributeGroupDataActionInterface,
     SetAttributeLoadingStatus,
-    SetOpenAttributeEditPanelActionInterface,
     SetCurrentPageActionInterface,
     SetTotalPagesActionInterface,
     IFetchDeleteSingleAttribute,
+    ISetChoosedItems,
+    ISetAttributeGroupIds,
+    IConfirmDeleteSingleItem,
+    ICloseConfirmDialog,
 } from './contracts/types';
 
 export const fetchAttributeGroupData = (
@@ -34,6 +37,10 @@ export const setAttributeGroupData = (
     type: AttributeActionType.SET_ATTRIBUTE_GROUP_DATA,
     payload,
 });
+export const setAttributeGroupIds = (payload: string[]): ISetAttributeGroupIds => ({
+    type: AttributeActionType.SET_ATTRIBUTE_GROUP_IDS,
+    payload,
+});
 export const setCurrentPage = (payload: number): SetCurrentPageActionInterface => ({
     type: AttributeActionType.SET_CURRENT_PAGE,
     payload,
@@ -49,9 +56,14 @@ export const setAttributeLoadingStatus = (
     type: AttributeActionType.SET_ATTRIBUTE_LOADING_STATUS,
     payload,
 });
-export const setOpenAttributeEditPanel = (
-    payload: boolean
-): SetOpenAttributeEditPanelActionInterface => ({
-    type: AttributeActionType.SET_OPEN_ATTRIBUTE_EDIT_PANEL,
+export const setChoosedItems = (payload: string[]): ISetChoosedItems => ({
+    type: AttributeActionType.SET_CHOOSED_ITEMS,
     payload,
+});
+export const confirmDeleteSingleItem = (payload: string): IConfirmDeleteSingleItem => ({
+    type: AttributeActionType.CONFIRM_DELETE_SINGLE,
+    payload,
+});
+export const closeConfirmDialog = (): ICloseConfirmDialog => ({
+    type: AttributeActionType.CLOSE_CONFIRM_DIALOG,
 });

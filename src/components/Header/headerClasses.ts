@@ -19,6 +19,7 @@ export const headerClasses = makeStyles((theme: Theme) => {
         },
         tool_bar: {
             display: 'flex',
+            flexWrap: 'wrap',
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },

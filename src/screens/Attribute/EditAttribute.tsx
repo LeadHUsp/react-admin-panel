@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 //mui
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -14,23 +14,21 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import IconButton from '@material-ui/core/IconButton';
 import AutorenewIcon from '@material-ui/icons/Autorenew';
-import { theme } from 'theme';
-
 //libs
 import { useDispatch } from 'react-redux';
 import slugify from 'slugify';
 import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { useParams, Prompt } from 'react-router-dom';
-//components
+//other
 import { LoadingStatus } from 'store/types';
 import { DepthSearchSelect } from 'components/UI-parts/DepthSearchSelect';
 import { useAppSelector } from 'hooks/redux';
 import { fetchCategoriesData } from 'store/ducks/category/actions';
+import { setOpenNotification } from 'store/ducks/notification/actions';
 import { setAttributeLoadingStatus } from 'store/ducks/attribute/actions';
 import { AttributeGroup } from 'store/ducks/attribute/contracts/state';
 import { Category } from 'store/ducks/category/contracts/state';
 import { AttributeApi } from 'services/api';
-import { SnackBarMessage } from 'components/UI-parts/SnackBarMessage';
 import { Preloader } from 'components/Preloader/Preloader';
 const useStyles = makeStyles({
     title: {
@@ -65,9 +63,9 @@ const EditAttribute: React.FC = () => {
     const categoriesStatus = useAppSelector((state) => state.categories.status);
     const attributeStatus = useAppSelector((state) => state.attribute.status);
     const categoriesNames = useAppSelector((state) => state.categories.categoriesNames);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
     const [savedData, setSavedData] = useState(false);
-    const [snackBarMessage, setSnackBarMessage] = useState('');
+
     const { editAttrId } = useParams<{ editAttrId: string | undefined }>();
     const {
         handleSubmit,
@@ -135,8 +133,12 @@ const EditAttribute: React.FC = () => {
                 }
             }
         } catch (error) {
-            setSnackbarOpen(true);
-            setSnackBarMessage('Ошибка при загрузке данных атрибута');
+            dispatch(
+                setOpenNotification({
+                    message: 'Ошибка при загрузке данных атрибута',
+                    severity: 'error',
+                })
+            );
         }
     };
     useEffect(() => {
@@ -183,10 +185,6 @@ const EditAttribute: React.FC = () => {
 
         return flag || 'slug должен быть уникальным';
     };
-    //обработчик кнопки закрытия окна с сообщением
-    const closeSnackBar = useCallback(() => {
-        setSnackbarOpen(false);
-    }, []);
 
     //обработчик отправки данных
     const sendDataToServer = async (data: AttributeGroup) => {
@@ -203,11 +201,21 @@ const EditAttribute: React.FC = () => {
             editAttrId
                 ? await AttributeApi.updateAttributeGroup(attributeData, editAttrId)
                 : await AttributeApi.postSingleAttributeGroup(attributeData);
-            setSnackbarOpen(true);
+
             setSavedData(true);
             editAttrId
-                ? setSnackBarMessage('Атрибут обновлен')
-                : setSnackBarMessage('Атрибут создан');
+                ? dispatch(
+                      setOpenNotification({
+                          message: 'Атрибут обновлен',
+                          severity: 'success',
+                      })
+                  )
+                : dispatch(
+                      setOpenNotification({
+                          message: 'Атрибут создан',
+                          severity: 'success',
+                      })
+                  );
         } catch (error: any) {
             console.log(error);
             if (Object.keys(error?.response?.data).length > 0) {
@@ -219,10 +227,20 @@ const EditAttribute: React.FC = () => {
                     });
                 }
             }
-            setSnackbarOpen(true);
+
             editAttrId
-                ? setSnackBarMessage('Ошибка при обновлении атрибута')
-                : setSnackBarMessage('Ошибка при создании атрибута');
+                ? dispatch(
+                      setOpenNotification({
+                          message: 'Ошибка при обновлении атрибута',
+                          severity: 'error',
+                      })
+                  )
+                : dispatch(
+                      setOpenNotification({
+                          message: 'Ошибка при создании атрибута',
+                          severity: 'error',
+                      })
+                  );
         } finally {
             dispatch(setAttributeLoadingStatus(LoadingStatus.LOADED));
         }
@@ -233,9 +251,7 @@ const EditAttribute: React.FC = () => {
                 when={isDirty && !savedData}
                 message="Вы действительно хотите уйти, ваши изменения не сохранятся"
             />
-            <SnackBarMessage open={snackbarOpen} handleClose={closeSnackBar}>
-                {snackBarMessage}
-            </SnackBarMessage>
+
             <Preloader open={attributeStatus === LoadingStatus.LOADING} />
 
             <Grid item xs={12}>

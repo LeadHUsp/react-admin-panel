@@ -22,7 +22,7 @@ import Dialog from '@material-ui/core/Dialog/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import {
     DropLoaderMemo,
     SingleFileUploadWithProgressMemo,
@@ -32,6 +32,15 @@ import Pagination from '@material-ui/lab/Pagination';
 import Box from '@material-ui/core/Box/Box';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import PaginationItem from '@material-ui/lab/PaginationItem';
+
+const useStyles = makeStyles({
+    gridItem: {
+        '@media screen and (max-width:400px)': {
+            maxWidth: '100%',
+            flexBasis: '100%',
+        },
+    },
+});
 
 const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
     modal,
@@ -47,7 +56,7 @@ const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
     let location = useLocation();
     let params = useParams<{ page?: string }>();
     let pageFromRouter = params.page;
-
+    const classes = useStyles();
     useEffect(() => {
         // dispatch(fetchGalleryItems(Number(page)));
         return () => {
@@ -126,7 +135,14 @@ const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
 
             {galleryItems.map((item: GalleryItem) => {
                 return (
-                    <Grid item xs={6} md={4} lg={3} key={item._id}>
+                    <Grid
+                        item
+                        xs={6}
+                        sm={4}
+                        md={4}
+                        lg={3}
+                        key={item._id}
+                        className={classes.gridItem}>
                         <MediaCard
                             item={item}
                             deleteButtonHandler={() => {

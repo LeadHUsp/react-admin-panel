@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams, Prompt } from 'react-router-dom';
 import {
-    fetchSingleGalleryItem,
     uploadChangeGalleryItem,
     setChangeNotSaved,
+    setGalleryLoadingStatus,
+    setEditGalleryItem,
 } from 'store/ducks/gallery/actions';
+
 import { GalleryItem } from 'store/ducks/gallery/contracts/state';
 import { useAppSelector } from 'hooks/redux';
 import { LoadingStatus } from 'store/types';
@@ -34,6 +36,8 @@ import { Beforeunload } from 'react-beforeunload';
 import defaulThumb from 'static/default-thumbnail.jpg';
 //helpers
 import formatDate from 'helpers/dateFormating';
+import { galleryApi } from 'services/api';
+import { setOpenNotification } from 'store/ducks/notification/actions';
 const useStyles = makeStyles({
     img_thumb: {
         maxWidth: '100%',
@@ -85,30 +89,43 @@ export default function GalleryEdit() {
         updatedAt,
     }: GalleryItem = editGalleryItem;
     const dispatch = useDispatch();
-    const [editParams, setEditParams] = React.useState<InputStateInterface>({
-        title,
-        alt,
+    const [editParams, setEditParams] = useState<InputStateInterface>({
+        title: 'init',
+        alt: 'init',
     });
 
     const beforeUnloadHandler = (event: any) => {
         event.preventDefault();
         return 'Are you sure you want to exit?';
     };
-    React.useEffect(() => {
-        dispatch(fetchSingleGalleryItem(id));
+    const fetchItemData = async () => {
+        try {
+            dispatch(setGalleryLoadingStatus(LoadingStatus.LOADING));
+            const { data } = await galleryApi.getSingleGalleryItem(id);
+            setEditParams({ title: data.title, alt: data.alt });
+            dispatch(setEditGalleryItem(data));
+        } catch (error) {
+            setOpenNotification({
+                message: 'Произошла ошибка при загрузке данных',
+                severity: 'error',
+            });
+        } finally {
+            dispatch(setGalleryLoadingStatus(LoadingStatus.LOADED));
+        }
+    };
+    useEffect(() => {
+        fetchItemData();
+        dispatch(setChangeNotSaved(false));
+
         // eslint-disable-next-line
     }, []);
-    React.useEffect(() => {
-        setEditParams({ title, alt });
-
-        return () => {
-            if (title !== editParams.title || alt !== editParams.alt) {
-                dispatch(setChangeNotSaved(true));
-            } else {
-                dispatch(setChangeNotSaved(false));
-            }
-        };
-    }, [title, alt]);
+    useEffect(() => {
+        if (title !== editParams.title || alt !== editParams.alt) {
+            dispatch(setChangeNotSaved(true));
+        } else {
+            dispatch(setChangeNotSaved(false));
+        }
+    }, [alt, title, editParams.alt, editParams.title, dispatch]);
 
     const handleChangeParams = (e: React.ChangeEvent): void => {
         const target = e.target as HTMLInputElement;
@@ -218,6 +235,22 @@ export default function GalleryEdit() {
                                         </Grid>
                                     </Grid>
                                 </form>
+                                {/* <Button
+                                    onClick={() => {
+                                        dispatch(
+                                            setOpenNotification({
+                                                isOpen: true,
+                                                message: 'Message of success',
+                                                severity: 'success',
+                                            })
+                                        );
+                                    }}
+                                    variant="contained"
+                                    color="primary"
+                                    size="medium"
+                                    startIcon={<SaveIcon />}>
+                                    Показать сообщение
+                                </Button> */}
                             </Box>
                         </Grid>
                         <Grid item lg={7}>

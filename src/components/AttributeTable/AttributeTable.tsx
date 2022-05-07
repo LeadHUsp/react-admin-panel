@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useHistory, useParams, Link } from 'react-router-dom';
 import { parse, stringify, exclude, pick } from 'query-string';
 //mui
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Table from '@material-ui/core/Table';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
@@ -22,13 +22,14 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { theme } from 'theme';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import SearchIcon from '@material-ui/icons/Search';
+
 //store
 import { LoadingStatus } from 'store/types';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { useDispatch } from 'react-redux';
 import { FetchedCategoryInterface } from 'store/ducks/category/contracts/state';
+import { closeConfirmDialog } from 'store/ducks/attribute/actions';
 
-//components
+//other
 import { DepthSearchSelect } from 'components/UI-parts/DepthSearchSelect';
 import { AttrTableHead } from './AttrTableHead';
 import { AttrTablePagination } from './AttrTablePagination';
@@ -38,6 +39,8 @@ import { usePrevious } from 'helpers/hooks';
 import { fetchCategoriesData } from 'store/ducks/category/actions';
 import isEqual from 'lodash/isEqual';
 import isArray from 'lodash/isArray';
+import { СonfirmDialog } from 'components/UI-parts/ConfirmDialog';
+import { useAppSelector } from 'hooks/redux';
 
 interface ISearchFilterOptionsState {
     [x: string]: any;
@@ -48,9 +51,17 @@ interface ISearchFilterOptionsState {
 }
 export const useStyles = makeStyles({
     table: {
-        minWidth: 650,
+        minWidth: 1200,
+        overflow: 'auto',
+    },
+    table_head: {
+        borderTop: '1px solid #e3e3e3',
     },
     cell: {
+        borderRight: '1px solid #e3e3e3',
+    },
+    action_cell: {
+        width: 130,
         borderRight: '1px solid #e3e3e3',
     },
     wrapper: {
@@ -81,16 +92,17 @@ export const AttributeTable: React.FC = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const [filterOpen, setFilterOpen] = useState<boolean>(true);
-    const categories = useSelector((state: RootState) => state.categories.categories);
-    const flatCategoriesArray = useSelector(
-        (state: RootState) => state.categories.flatCategoriesArray
+    const categories = useAppSelector((state) => state.categories.categories);
+    const flatCategoriesArray = useAppSelector(
+        (state) => state.categories.flatCategoriesArray
+    );
+    const openConfirmDialog = useAppSelector(
+        (state) => state.attribute.open_confirm_dialog
     );
     const [searchTextValue, setSearchTextValue] = useState<string | string[] | null>('');
-    const categoriesStatus = useSelector((state: RootState) => state.categories.status);
-    const attributeLoadingStatus = useSelector(
-        (state: RootState) => state.attribute.status
-    );
-    const totalPages = useSelector((state: RootState) => state.attribute.total_pages);
+    const categoriesStatus = useAppSelector((state) => state.categories.status);
+    const attributeLoadingStatus = useAppSelector((state) => state.attribute.status);
+    const totalPages = useAppSelector((state) => state.attribute.total_pages);
     const [searchFilterOptions, setSearchFilterOptions] =
         useState<ISearchFilterOptionsState>({
             limit: 20,
@@ -211,18 +223,35 @@ export const AttributeTable: React.FC = () => {
         },
         [searchTextValue]
     );
-    const handleDeleteSingleItem = React.useCallback(
-        (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-            setSearchFilterOptions((prev) => ({
-                ...prev,
-                search: searchTextValue,
-            }));
-        },
-        [searchTextValue]
-    );
+    // const handleDeleteSingleItem = React.useCallback(
+    //     (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    //         setSearchFilterOptions((prev) => ({
+    //             ...prev,
+    //             search: searchTextValue,
+    //         }));
+    //     },
+    //     [searchTextValue]
+    // );
+    const onCloseConfirmDialog = React.useCallback(() => {
+        dispatch(closeConfirmDialog());
+    }, [dispatch]);
+
     return (
         <>
             <Paper className={classes.wrapper}>
+                <СonfirmDialog
+                    open={openConfirmDialog}
+                    modalTitle="Подтвердите удаление элемента"
+                    onClose={onCloseConfirmDialog}
+                    onConfirm={() => {
+                        console.log('confirm');
+                    }}>
+                    <Typography gutterBottom>
+                        Отменить данное действие будет невозможно. Товары которые в
+                        характеристиках имеют данный атрибут будут автоматически
+                        обновлены.
+                    </Typography>
+                </СonfirmDialog>
                 <Toolbar>
                     <Typography
                         className={classes.title}

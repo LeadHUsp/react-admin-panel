@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -39,6 +39,7 @@ const useStyles = makeStyles({
     image: {
         display: 'block',
         maxHeight: '100%',
+        maxWidth: '100%',
     },
     media: {
         height: 200,
