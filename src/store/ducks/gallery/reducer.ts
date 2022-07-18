@@ -72,6 +72,9 @@ export const galleryReducer = produce((draft: Draft<GalleryState>, action) => {
         case GalleryActionType.SET_GALLERY_OPEN_MODAL:
             draft.open_gallery_modal = action.payload;
             break;
+        case GalleryActionType.SET_LOADING_STATE:
+            draft.status = action.payload;
+            break;
         default:
             break;
     }

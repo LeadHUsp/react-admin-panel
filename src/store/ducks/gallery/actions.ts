@@ -20,7 +20,7 @@ import {
 
 import { GalleryState, GalleryItem } from './contracts/state';
 import { UploadedFile } from 'components/DropLoader/DropLoader';
-
+import { RouteComponentProps } from 'react-router-dom';
 export const fetchGalleryItems = (
     payload?: number
 ): FetchGalleryItemsActionInterface => ({
@@ -54,9 +54,11 @@ export const deleteUploadGalleryItem = (
 export const clearUploadItems = (): ClearUploadGalleryItemsActionInterface => ({
     type: GalleryActionType.CLEAR_UPLOAD_GALLERY_ITEMS,
 });
-export const deleteSingleGalleryItemRequest = (
-    payload: GalleryItem
-): DeleteSingleGalleryItemRequestActionInterface => ({
+export const deleteSingleGalleryItemRequest = (payload: {
+    item: GalleryItem;
+    history: RouteComponentProps['history'];
+    modal: boolean;
+}): DeleteSingleGalleryItemRequestActionInterface => ({
     type: GalleryActionType.DELETE_SINGLE_GALLERY_ITEM,
     payload,
 });
@@ -74,10 +76,13 @@ export const deleteChoosedItem = (
     type: GalleryActionType.DELETE_CHOOSED_ITEM,
     payload,
 });
-export const deleteChoosedItemsRequest =
-    (): DeleteChoosedItemsRequestActionInterface => ({
-        type: GalleryActionType.DELETE_CHOOSED_ITEMS_REQUEST,
-    });
+export const deleteChoosedItemsRequest = (payload: {
+    history: RouteComponentProps['history'];
+    modal: boolean;
+}): DeleteChoosedItemsRequestActionInterface => ({
+    type: GalleryActionType.DELETE_CHOOSED_ITEMS_REQUEST,
+    payload,
+});
 export const clearChoosedItems = (): ClearChoosedItemsActionInterface => ({
     type: GalleryActionType.CLEAR_CHOOSED_ITEMS,
 });

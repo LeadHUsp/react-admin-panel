@@ -9,6 +9,7 @@ import {
     FetchGalleryItemsActionInterface,
     FetchSingleGalleryItemActionInterface,
     UploadChangeGalleryItemActionInterface,
+    DeleteChoosedItemsRequestActionInterface,
 } from './contracts/types';
 import {
     fetchGalleryItems,
@@ -32,7 +33,14 @@ export function* fetchGalleryItemsRequest({ payload }: FetchGalleryItemsActionIn
         yield put(setGalleryItems(data));
         yield put(setTotalPages(Number(total_pages)));
     } catch (error) {
-        console.log(error);
+        yield put(
+            setOpenNotification({
+                message: 'При загрузке данных произошла ошибка',
+                severity: 'error',
+            })
+        );
+    } finally {
+        yield put(setGalleryLoadingStatus(LoadingStatus.LOADED));
     }
 }
 
@@ -40,23 +48,69 @@ export function* deleteSingleGalleryItemRequest({
     payload,
 }: DeleteSingleGalleryItemRequestActionInterface) {
     try {
-        yield call(galleryApi.deleteGalleryItems, { [payload._id]: payload });
-        yield put(fetchGalleryItems());
+        //удаляем текущие элементы
+        yield put(setGalleryLoadingStatus(LoadingStatus.LOADING));
+        yield call(galleryApi.deleteGalleryItems, { [payload.item._id]: payload.item });
+        const currentPage: number = yield select(
+            (state: RootState) => state.gallery.current_page
+        );
+        const {
+            data: { data, total_pages },
+        } = yield call(galleryApi.getGallleryItems, currentPage);
+        //если после удаление на текущей странице нет элементов, то
+        //загружаем последнюю доступную страницу
+        if (Number(total_pages) < currentPage) {
+            //в модальном окне модификация истории не требуется
+            !payload.modal && payload.history.replace(`/gallery/page=${total_pages}`);
+            yield put(fetchGalleryItems(total_pages));
+        } else {
+            yield put(setGalleryItems(data));
+        }
     } catch (error) {
-        console.log(error);
+        yield put(
+            setOpenNotification({
+                message: 'При удалении элемента произошла ошибка',
+                severity: 'error',
+            })
+        );
+    } finally {
+        yield put(setGalleryLoadingStatus(LoadingStatus.LOADED));
     }
 }
-export function* deletedChoosedItemsRequest() {
+export function* deletedChoosedItemsRequest({
+    payload,
+}: DeleteChoosedItemsRequestActionInterface) {
     try {
+        yield put(setGalleryLoadingStatus(LoadingStatus.LOADING));
         const choosedItems: ChoosedItem = yield select(
             (state: RootState) => state.gallery.choosed_items
         );
-
         yield call(galleryApi.deleteGalleryItems, { ...choosedItems });
+        const currentPage: number = yield select(
+            (state: RootState) => state.gallery.current_page
+        );
+        const {
+            data: { data, total_pages },
+        } = yield call(galleryApi.getGallleryItems, currentPage);
+        //если после удаление на текущей странице нет элементов, то
+        //загружаем последнюю доступную страницу
+        if (Number(total_pages) < currentPage) {
+            //в модальном окне модификация истории не требуется
+            !payload.modal && payload.history.replace(`/gallery/page=${total_pages}`);
+            yield put(fetchGalleryItems(total_pages));
+        } else {
+            yield put(setGalleryItems(data));
+        }
         yield put(clearChoosedItems());
-        yield put(fetchGalleryItems());
     } catch (error) {
-        console.log(error);
+        yield put(
+            setOpenNotification({
+                message: 'При удалении элементов произошла ошибка',
+                severity: 'error',
+            })
+        );
+    } finally {
+        yield put(setGalleryLoadingStatus(LoadingStatus.LOADED));
     }
 }
 function* fetchSingleGalleryItemRequest({

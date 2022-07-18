@@ -12,7 +12,7 @@ import {
     setCurrentPage,
     setChoosedSingleItem,
 } from 'store/ducks/gallery/actions';
-import { RootState } from '../../store/store';
+
 import { GalleryItem } from '../../store/ducks/gallery/contracts/state';
 import MediaCard from 'screens/Gallery/MediaCard';
 import Grid from '@material-ui/core/Grid/Grid';
@@ -30,9 +30,11 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import Pagination from '@material-ui/lab/Pagination';
 import Box from '@material-ui/core/Box/Box';
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { Link, useParams, useLocation, useHistory } from 'react-router-dom';
 import PaginationItem from '@material-ui/lab/PaginationItem';
-
+import { useAppSelector } from 'hooks/redux';
+import { Preloader } from 'components/Preloader/Preloader';
+import { LoadingStatus } from 'store/types';
 const useStyles = makeStyles({
     gridItem: {
         '@media screen and (max-width:400px)': {
@@ -47,12 +49,13 @@ const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
     singleChoosed,
 }) => {
     const dispatch = useDispatch();
-    const galleryItems = useSelector((state: RootState) => state.gallery.gallery_items);
-    const ChoosedItems = useSelector((state: RootState) => state.gallery.choosed_items);
-    const files = useSelector((state: RootState) => state.gallery.new_gallery_items);
-    const totalPages = useSelector((state: RootState) => state.gallery.total_pages);
-    const page = useSelector((state: RootState) => state.gallery.current_page);
-
+    const galleryItems = useAppSelector((state) => state.gallery.gallery_items);
+    const ChoosedItems = useAppSelector((state) => state.gallery.choosed_items);
+    const files = useAppSelector((state) => state.gallery.new_gallery_items);
+    const totalPages = useAppSelector((state) => state.gallery.total_pages);
+    const page = useAppSelector((state) => state.gallery.current_page);
+    const loadingStatus = useAppSelector((state) => state.gallery.status);
+    const history = useHistory();
     let location = useLocation();
     let params = useParams<{ page?: string }>();
     let pageFromRouter = params.page;
@@ -104,10 +107,16 @@ const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
             : dispatch(setChoosedSingleItem(item));
     };
     const handleDeleteChoosedItemsRequest = () => {
-        dispatch(deleteChoosedItemsRequest());
+        dispatch(
+            deleteChoosedItemsRequest({
+                modal,
+                history,
+            })
+        );
     };
     return (
         <Grid container spacing={2}>
+            <Preloader open={loadingStatus === LoadingStatus.LOADING} />
             <Grid item container spacing={2}>
                 <Grid item>
                     <Button
@@ -146,7 +155,13 @@ const Gallery: React.FC<{ modal: boolean; singleChoosed: boolean }> = ({
                         <MediaCard
                             item={item}
                             deleteButtonHandler={() => {
-                                dispatch(deleteSingleGalleryItemRequest(item));
+                                dispatch(
+                                    deleteSingleGalleryItemRequest({
+                                        item,
+                                        history,
+                                        modal,
+                                    })
+                                );
                             }}
                             choosed={ChoosedItems.hasOwnProperty(item._id)}
                             checkBoxActionHandler={

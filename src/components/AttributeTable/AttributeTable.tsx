@@ -75,12 +75,7 @@ export const useStyles = makeStyles({
     title: {
         flex: '1 1 100%',
     },
-    edit_panel: {
-        width: '500px',
-    },
-    input: {
-        padding: theme.spacing(2),
-    },
+
     edit_title: {
         textAlign: 'center',
         paddingTop: theme.spacing(4),

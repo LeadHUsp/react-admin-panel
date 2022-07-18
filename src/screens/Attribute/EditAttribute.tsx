@@ -191,7 +191,7 @@ const EditAttribute: React.FC = () => {
         try {
             dispatch(setAttributeLoadingStatus(LoadingStatus.LOADING));
             // @ts-ignore
-            const categoryId = data.category[0]._id;
+            const categoryId = data.category.length > 0 ? data.category[0]._id : null;
             const attributeData = {
                 ...data,
                 ...{
@@ -218,7 +218,7 @@ const EditAttribute: React.FC = () => {
                   );
         } catch (error: any) {
             console.log(error);
-            if (Object.keys(error?.response?.data).length > 0) {
+            if (error.response && Object.keys(error?.response?.data).length > 0) {
                 for (const key in error.response.data) {
                     // @ts-ignore
                     setError(key, {

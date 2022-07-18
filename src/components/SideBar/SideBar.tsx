@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import PermMediaOutlinedIcon from '@material-ui/icons/PermMediaOutlined';
+import RateReviewOutlinedIcon from '@material-ui/icons/RateReviewOutlined';
 import ListIcon from '@material-ui/icons/List';
 import TuneIcon from '@material-ui/icons/Tune';
 import Divider from '@material-ui/core/Divider';
@@ -32,7 +33,11 @@ export const SideBar: React.FC = (): React.ReactElement => {
                         link: '/orders',
                         component: <ShoppingBasketIcon />,
                     },
-
+                    {
+                        name: 'Отзывы',
+                        link: '/reviews',
+                        component: <RateReviewOutlinedIcon />,
+                    },
                     {
                         name: 'Галерея',
                         link: '/gallery',

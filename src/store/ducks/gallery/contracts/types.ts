@@ -2,6 +2,7 @@ import { UploadedFile } from 'components/DropLoader/DropLoader';
 import { Action } from 'redux';
 import { LoadingStatus } from 'store/types';
 import { GalleryItem, ChoosedItem } from './state';
+import { RouteComponentProps } from 'react-router-dom';
 
 export enum GalleryActionType {
     FETCH_GALLERY_ITEMS = 'gallery/FETCH_GALLERY_ITEMS',
@@ -50,7 +51,11 @@ export interface ClearUploadGalleryItemsActionInterface extends Action {
 }
 export interface DeleteSingleGalleryItemRequestActionInterface extends Action {
     type: GalleryActionType.DELETE_SINGLE_GALLERY_ITEM;
-    payload: GalleryItem;
+    payload: {
+        item: GalleryItem;
+        history: RouteComponentProps['history'];
+        modal: boolean;
+    };
 }
 export interface SetChoosedItemsActionInterface extends Action {
     type: GalleryActionType.SET_CHOOSED_ITEMS;
@@ -66,6 +71,10 @@ export interface DeleteChoosedItemActionInterface extends Action {
 }
 export interface DeleteChoosedItemsRequestActionInterface extends Action {
     type: GalleryActionType.DELETE_CHOOSED_ITEMS_REQUEST;
+    payload: {
+        history: RouteComponentProps['history'];
+        modal: boolean;
+    };
 }
 export interface ClearChoosedItemsActionInterface extends Action {
     type: GalleryActionType.CLEAR_CHOOSED_ITEMS;

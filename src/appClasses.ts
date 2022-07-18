@@ -29,6 +29,7 @@ export const appClasses = makeStyles((theme: Theme) => {
             marginLeft: -drawerWidth,
             paddingTop: theme.spacing(11),
             minHeight: '100vh',
+            overflowX: 'hidden',
             '@media screen and (min-width:600px)': {
                 paddingLeft: theme.spacing(3),
                 paddingRight: theme.spacing(3),
